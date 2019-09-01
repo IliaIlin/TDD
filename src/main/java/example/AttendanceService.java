@@ -16,8 +16,11 @@ public class AttendanceService {
         List<Record> records = attendanceDao.getRecords(employeeId, date);
         Optional<Record> enterRecord = getRecordByType(records, Type.ENTER_OFFICE);
         Optional<Record> leaveRecord = getRecordByType(records, Type.LEAVE_OFFICE);
-        return Duration.between(enterRecord.get().getTime(), leaveRecord.get().getTime())
-                .minus(Duration.ofMinutes(30));
+        if (leaveRecord.isPresent() && leaveRecord.get().getTime() != null) {
+            return Duration.between(enterRecord.get().getTime(), leaveRecord.get().getTime())
+                    .minus(Duration.ofMinutes(30));
+        }
+        return Duration.ZERO;
     }
 
     private Optional<Record> getRecordByType(List<Record> records, Type type) {

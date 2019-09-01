@@ -25,6 +25,9 @@ public class AttendanceServiceTest {
     private AttendanceDao attendanceDao;
     private AttendanceService attendanceService;
 
+    private final long EMPLOYEE_ID = 1L;
+    private final LocalDate DATE_TO_CHECK = LocalDate.now();
+
     @BeforeEach
     public void init() {
         attendanceService = new AttendanceService(attendanceDao);
@@ -37,6 +40,14 @@ public class AttendanceServiceTest {
                         List.of(new Record(ENTER_OFFICE, LocalTime.of(10, 30)),
                                 new Record(LEAVE_OFFICE, LocalTime.of(18, 30))));
         Duration expectedAttendance = Duration.ofHours(7).plus(Duration.ofMinutes(30));
-        assertEquals(expectedAttendance, attendanceService.timeInTheOffice(1L, LocalDate.now()));
+        assertEquals(expectedAttendance, attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK));
+    }
+
+    @Test
+    public void pressEnterOnly() {
+        when(attendanceDao.getRecords(anyLong(), any()))
+                .thenReturn(
+                        List.of(new Record(ENTER_OFFICE, LocalTime.of(10, 30))));
+        assertEquals(Duration.ZERO, attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK));
     }
 }
