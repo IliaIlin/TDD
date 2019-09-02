@@ -50,4 +50,13 @@ public class AttendanceServiceTest {
                         List.of(new Record(ENTER_OFFICE, LocalTime.of(10, 30))));
         assertEquals(Duration.ZERO, attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK));
     }
+
+    @Test
+    public void pressLeaveOnly() {
+        when(attendanceDao.getRecords(anyLong(), any()))
+                .thenReturn(
+                        List.of(new Record(LEAVE_OFFICE, LocalTime.of(18, 0))));
+        assertEquals(Duration.ZERO, attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK
+        ));
+    }
 }
