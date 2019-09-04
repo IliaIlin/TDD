@@ -11,8 +11,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
-import static example.Type.ENTER_OFFICE;
-import static example.Type.LEAVE_OFFICE;
+import static example.Type.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
@@ -58,5 +57,16 @@ public class AttendanceServiceTest {
                         List.of(new Record(LEAVE_OFFICE, LocalTime.of(18, 0))));
         assertEquals(Duration.ZERO, attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK
         ));
+    }
+
+    @Test
+    public void pressEnter_and_pressLeave_withLunch() {
+        when(attendanceDao.getRecords(anyLong(), any()))
+                .thenReturn(
+                        List.of(new Record(ENTER_OFFICE, LocalTime.of(10, 30)),
+                                new Record(ENTER_LUNCH, LocalTime.of(13, 30)),
+                                new Record(LEAVE_LUNCH, LocalTime.of(14, 30)),
+                                new Record(LEAVE_OFFICE, LocalTime.of(18, 30))));
+        assertEquals(Duration.ofHours(7), attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK));
     }
 }
