@@ -69,4 +69,13 @@ public class AttendanceServiceTest {
                                 new Record(LEAVE_OFFICE, LocalTime.of(18, 30))));
         assertEquals(Duration.ofHours(7), attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK));
     }
+
+    @Test
+    public void pressLeaveEarlierThanEnter() {
+        when(attendanceDao.getRecords(anyLong(), any()))
+                .thenReturn(
+                        List.of(new Record(LEAVE_OFFICE, LocalTime.of(10, 30)),
+                                new Record(ENTER_OFFICE, LocalTime.of(11, 30))));
+        assertEquals(Duration.ZERO, attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK));
+    }
 }

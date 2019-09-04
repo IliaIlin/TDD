@@ -26,7 +26,7 @@ public class AttendanceService {
         }
         LocalTime enterTime = enterRecord.get().getTime();
         LocalTime leaveTime = leaveRecord.get().getTime();
-        if (enterTime == null || leaveTime == null) {
+        if (enterTime == null || leaveTime == null || leaveTime.isBefore(enterTime)) {
             return Duration.ZERO;
         }
         return Duration.between(enterTime, leaveTime)
