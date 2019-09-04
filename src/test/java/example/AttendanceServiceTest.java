@@ -78,4 +78,15 @@ public class AttendanceServiceTest {
                                 new Record(ENTER_OFFICE, LocalTime.of(11, 30))));
         assertEquals(Duration.ZERO, attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK));
     }
+
+    @Test
+    public void pressLeaveLunchEarlierThanEnterLunch() {
+        when(attendanceDao.getRecords(anyLong(), any()))
+                .thenReturn(
+                        List.of(new Record(ENTER_OFFICE, LocalTime.of(8, 0)),
+                                new Record(LEAVE_LUNCH, LocalTime.of(11, 30)),
+                                new Record(ENTER_LUNCH, LocalTime.of(12, 30)),
+                                new Record(LEAVE_OFFICE, LocalTime.of(18, 30))));
+        assertEquals(Duration.ofHours(10), attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK));
+    }
 }

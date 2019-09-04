@@ -41,7 +41,7 @@ public class AttendanceService {
         }
         LocalTime lunchEnterTime = lunchEnterRecord.get().getTime();
         LocalTime lunchLeaveTime = lunchLeaveRecord.get().getTime();
-        if (lunchEnterTime == null || lunchLeaveTime == null) {
+        if (lunchEnterTime == null || lunchLeaveTime == null || lunchLeaveTime.isBefore(lunchEnterTime)) {
             return DEFAULT_LUNCH_DURATION;
         }
         return Duration.between(lunchEnterTime, lunchLeaveTime);
