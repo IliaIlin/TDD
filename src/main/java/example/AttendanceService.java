@@ -8,8 +8,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
 
-import static example.Type.ENTER_LUNCH;
-import static example.Type.LEAVE_LUNCH;
+import static example.Type.*;
 
 public class AttendanceService {
     private final AttendanceDao attendanceDao;
@@ -53,6 +52,9 @@ public class AttendanceService {
     private Optional<Record> getRecordByType(List<Record> records, Type type) {
         Stream<Record> recordStream = records.stream()
                 .filter(record -> record.getType() == type);
+        if (type == ENTER_OFFICE || type == ENTER_LUNCH) {
+            return recordStream.min(Comparator.comparing(Record::getTime));
+        }
         return recordStream.max(Comparator.comparing(Record::getTime));
     }
 }
