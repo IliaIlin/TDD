@@ -3,8 +3,10 @@ package example;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Stream;
 
 import static example.Type.ENTER_LUNCH;
 import static example.Type.LEAVE_LUNCH;
@@ -49,8 +51,8 @@ public class AttendanceService {
 
 
     private Optional<Record> getRecordByType(List<Record> records, Type type) {
-        return records.stream()
-                .filter(record -> record.getType() == type)
-                .findFirst();
+        Stream<Record> recordStream = records.stream()
+                .filter(record -> record.getType() == type);
+        return recordStream.max(Comparator.comparing(Record::getTime));
     }
 }

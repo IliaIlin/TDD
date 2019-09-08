@@ -89,4 +89,14 @@ public class AttendanceServiceTest {
                                 new Record(LEAVE_OFFICE, LocalTime.of(18, 30))));
         assertEquals(Duration.ofHours(10), attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK));
     }
+
+    @Test
+    public void pressEnter_and_pressLeaveTwoTimes() {
+        when(attendanceDao.getRecords(anyLong(), any()))
+                .thenReturn(
+                        List.of(new Record(ENTER_OFFICE, LocalTime.of(8, 0)),
+                                new Record(LEAVE_OFFICE, LocalTime.of(16, 0)),
+                                new Record(LEAVE_OFFICE, LocalTime.of(17, 30))));
+        assertEquals(Duration.ofHours(9), attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK));
+    }
 }
