@@ -110,4 +110,13 @@ public class AttendanceServiceTest {
         Duration expectedDuration = Duration.ofHours(7).plus(Duration.ofMinutes(30));
         assertEquals(expectedDuration, attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK));
     }
+
+    @Test
+    public void durationBetweenRecordsIsLessThanLunchTime() {
+        when(attendanceDao.getRecords(anyLong(), any()))
+                .thenReturn(
+                        List.of(new Record(ENTER_OFFICE, LocalTime.of(8, 0)),
+                                new Record(LEAVE_OFFICE, LocalTime.of(8, 25))));
+        assertEquals(Duration.ofMinutes(25), attendanceService.timeInTheOffice(EMPLOYEE_ID, DATE_TO_CHECK));
+    }
 }

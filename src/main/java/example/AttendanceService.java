@@ -30,8 +30,9 @@ public class AttendanceService {
         if (enterTime == null || leaveTime == null || leaveTime.isBefore(enterTime)) {
             return Duration.ZERO;
         }
-        return Duration.between(enterTime, leaveTime)
-                .minus(timeForLunch(records));
+        Duration inOffice = Duration.between(enterTime, leaveTime);
+        Duration lunchDuration = timeForLunch(records);
+        return inOffice.compareTo(lunchDuration) > 0 ? inOffice.minus(lunchDuration) : inOffice;
     }
 
     private Duration timeForLunch(List<Record> records) {
